@@ -1,79 +1,171 @@
-<!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>Taylor Powell 341/441 Website</title>
-  <meta name="author" content="Taylor Powell">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Add icon library -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <link rel="stylesheet" href="./HW1/styles.css">
+    <title>Sheldon's Adventure</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
 
-<!-- div for hero-->
-<div class="h">
-  <!-- div for title -->
-  <div class="title">
-    <!-- really enjoyed the style of Michael's-->
-    <!-- Put my own twist on it -->
-    <!-- recreate it -->
 
-    <h2>MART 341 - MART 441</h2>
-    <h1>Taylor Powell</h1>
-    <div class="nav">
-      <a href="#info">
-        <div class="nav-item">Info</div>
-      </a>
-      <a href="#future">
-        <div class="nav-item">Future</div>
-      </a>
-      <a href="#find">
-        <div class="nav-item">Find Me</div>
-      </a>
-    </div>
-  </div>
-</div>
-
-<div id="info">
-  <div class="dcont">
+<div class="dcont">
     <div class="des">
+        <img src="imgs/beagle.png" id="image" height="400" width="330">
+        <h1>Beagley Adventure PT 2</h1>
+        <p><div id="story">  Sheldon, the beagle, has been left alone yet again! Are you ready for more mischief? Where should he start Outside or Inside?</div></p>
 
-      <h1>Information</h1>
-      <p>My name is Taylor Powell, and I am senior Computer Science student at the</p>
-      <p>University of Montana and is expected to graduate May 2023.</p>
-      <p>I have experience in HTML, CSS, JavaScript and various JS libraries.</p>
-      <p>I also have had an internship with the Griz Soccer team for Data Analytics.</p>
+        <br>
+        <input type="text" class='input1' size="30" id="choice" value="Please enter Outside or Inside">
+        <button id="btnSubmit"  class='button button1' onclick="getChoice1();">Click to continue</button>
+
+        <input type="text" size="30" class='input1' id="choice2" value="Enter bark or chase." style="display:none">
+        <button id="btnSubmit2" class='button button1' onclick="getChoice2();"  style="display:none">Click to continue</button>
+
+        <input type="text" size="30"class='input1' id="choice3" value="Enter toy box or bed."  style="display:none">
+        <button id="btnSubmit3" class='button button1' onclick="getChoice3();" style="display:none">Click to continue</button>
+
+        <input type="text" size="30"class='input1' id="choice5" value="Enter yes or no"  style="display:none">
+        <button id="btnSubmit5" class='button button1' onclick="getChoice5();" style="display:none">Click to continue</button>
+
+
+        <input type="text" size="30"class='input1' id="choice4" value="Enter true or false"  style="display:none">
+        <button id="btnSubmit4" class='button button1' onclick="getChoice4();" style="display:none">Click to continue</button>
+
     </div>
-  </div>
 </div>
 
-<div id="future">
-  <div class="dcont">
-    <div class="des">
-
-      <h1>Future</h1>
-      <p>Once I graduate I hope to relocate to the New York or Jacksonville, FL areas.</p>
-      <p>There, I will hopefully be employed as a Software Engineer.</p>
-      <p>I want to be near family and to also experience new things outside of Montana.</p>
-    </div>
-  </div>
-</div>
-
-<div id="find">
-  <div class="dcont">
-    <div class="des">
-
-      <h1>Find Me</h1>
-      <p><a href="https://www.linkedin.com/in/taylor-powell-/" class="fa fa-linkedin"></a>
-        <a href="https://github.com/tay2001" class="fa fa-github"></a></p>
-    </div>
-  </div>
-</div>
-
-</div>
 </body>
+
 </html>
+<script>
+    var bonecntr = 0;
+ var restart = false;
+
+
+        do {
+            function getChoice1() {
+                var choice = document.getElementById("choice").value;
+                var question = document.getElementById("story");
+                if (choice === "Outside") {
+                    document.getElementById("choice").style.display = "none";
+                    document.getElementById("btnSubmit").style.display = "none";
+
+                    document.getElementById("choice2").style.display = "block";
+                    document.getElementById("btnSubmit2").style.display = "block";
+
+
+                    question.innerHTML = "Sheldon runs outside, and sees a squirrel! Does he bark or chase?";
+                } else if (choice === "Inside") {
+                    document.getElementById("choice").style.display = "none";
+                    document.getElementById("btnSubmit").style.display = "none";
+
+                    document.getElementById("choice3").style.display = "block";
+                    document.getElementById("btnSubmit3").style.display = "block";
+                    question.innerHTML = "Sheldon bounds into the living room. Does he go to his toy box or his bed?";
+
+                } else {
+                    question.innerHTML = "Invalid choice, please try again";
+                }
+
+            }
+
+            function getChoice2() {
+                var ans = document.getElementById("choice2").value;
+                var question = document.getElementById("story");
+                if (ans === "bark") {
+                    document.getElementById("image").src = "imgs/beagle2.jpeg"
+                    question.innerHTML = "Sheldon bays at the squirrel, sending it running away! Would you like to restart true or false?";
+
+                    document.getElementById("choice2").style.display = "none";
+                    document.getElementById("btnSubmit2").style.display = "none";
+                    document.getElementById("choice4").style.display = "block";
+                    document.getElementById("btnSubmit4").style.display = "block";
+                } else if (ans === "chase") {
+                    question.innerHTML = "Sheldon runs at the squirrel, sending it up a tree! He looks down and finds a hole with a bone! Does he grab it yes or no?";
+                    document.getElementById("choice2").style.display = "none";
+                    document.getElementById("btnSubmit2").style.display = "none";
+                    document.getElementById("choice5").style.display = "block";
+                    document.getElementById("btnSubmit5").style.display = "block";
+                }
+            }
+
+            function getChoice3() {
+                var ans = document.getElementById("choice3").value;
+                var question = document.getElementById("story");
+                if (ans === "toy box") {
+                    document.getElementById("image").src = "imgs/toys.png"
+                    question.innerHTML = "Sheldon trots over to his toy box to chew on something! Would you like to restart true or false?";
+
+                    document.getElementById("choice3").style.display = "none";
+                    document.getElementById("btnSubmit3").style.display = "none";
+                    document.getElementById("choice4").style.display = "block";
+                    document.getElementById("btnSubmit4").style.display = "block";
+                } else if (ans === "bed") {
+                    question.innerHTML = "Sheldon walks over to his bed, deciding to take a nap instead. Would you like to restart true or false?";
+
+                    document.getElementById("choice3").style.display = "none";
+                    document.getElementById("btnSubmit3").style.display = "none";
+                    document.getElementById("choice4").style.display = "block";
+                    document.getElementById("btnSubmit4").style.display = "block";
+                }
+            }
+
+            function getChoice5() {
+                var ans = document.getElementById("choice5").value;
+                var question = document.getElementById("story");
+
+
+
+                if (ans === "yes") {
+                    document.getElementById("image").src = "imgs/bone.png"
+                    bonecntr += 1;
+                    question.innerHTML = "He grabbed a bone! He has " + bonecntr + " bones! Want to restart true or false?";
+
+                    document.getElementById("choice5").style.display = "none";
+                    document.getElementById("btnSubmit5").style.display = "none";
+                    document.getElementById("choice4").style.display = "block";
+                    document.getElementById("btnSubmit4").style.display = "block";
+
+                } else if (ans === "no") {
+                    question.innerHTML = "Sheldon left the bone alone. Would you like to restart true or false?";
+
+                    document.getElementById("choice5").style.display = "none";
+                    document.getElementById("btnSubmit5").style.display = "none";
+                    document.getElementById("choice4").style.display = "block";
+                    document.getElementById("btnSubmit4").style.display = "block";
+                }
+            }
+
+            function getChoice4() {
+                var ans = document.getElementById("choice4").value;
+                var question = document.getElementById("story");
+                if (ans === "true") {
+                    restart = true;
+                    document.getElementById("image").src = "imgs/beagle.png"
+                    question.innerHTML = " Sheldon, the beagle, has been left alone yet again! Are you ready for more mischief? Where should he start Outside or Inside?";
+
+                    document.getElementById("choice").style.display = "block";
+                    document.getElementById("btnSubmit").style.display = "block";
+
+                    document.getElementById("choice4").style.display = "none";
+                    document.getElementById("btnSubmit4").style.display = "none";
+                    document.getElementById("choice3").style.display = "none";
+                    document.getElementById("btnSubmit3").style.display = "none";
+                    document.getElementById("choice2").style.display = "none";
+                    document.getElementById("btnSubmit2").style.display = "none";
+                    document.getElementById("choice5").style.display = "none";
+                    document.getElementById("btnSubmit5").style.display = "none";
+
+                } else if (ans === "false") {
+
+                    document.getElementById("image").src = "imgs/beagle.png"
+                    question.innerHTML = "Sheldon is very thankful for your time!";
+                    document.getElementById("choice4").style.display = "none";
+                    document.getElementById("btnSubmit4").style.display = "none";
+
+                }
+            }
+        }while(restart);
+
+
+</script>
