@@ -1,8 +1,46 @@
 //https://www.youtube.com/watch?v=tjyDOHzKN0w was A LOT of help!
 //event listener to get cards and scramble
+
+
+// JSON declaration
+var player = {"firstname":"", "lastname":"", "age":0 , "score":5};
+
+// add to the JSON from the textboxes
+function addToPlayer()
+{
+    var firstName = document.getElementById("txtFirstName").value;
+    var lastName = document.getElementById("txtLastName").value;
+    var age = document.getElementById("txtAge").value;
+
+    player.firstname = firstName;
+    player.lastname = lastName;
+    player.age = age;
+    localStorage.setItem("playerInfo", JSON.stringify(player));
+    window.location = "index.html";
+}
+
+// get the information out of JSON
+function playerInfo()
+{
+    var playerInformation = localStorage.getItem("playerInfo");
+    player = JSON.parse(playerInformation);
+    var str = "Name: " + player.firstname + " " + player.lastname + "<br>" +
+        "Age: " + player.age + "<br>" + "Score: " + player.score;
+
+    if(document.getElementById("endInformation") != null)
+    {
+        document.getElementById("endInformation").innerHTML = str;
+    }
+
+
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     //list all card options
     //repeat the same 5 for all ten choices/matches
+
 
     const cards = [
         {
@@ -53,12 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
 
     //get the final score variable/text set up
-    const final = document.querySelector('#finalscore')
+    const finalscore = document.querySelector('#finalscore')
+    const attempts = document.querySelector('#attempts')
 
     //placeholder arrays for chosen card, its id, and what we've won
     let chosen = []
     let chosenid = []
     let won = []
+    let attempt = []
 
     //create the board
     function create() {
@@ -86,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cards[twoid].setAttribute('src', 'images/blank.jpg')
             //show alert you did so, then flip back
             alert('This is the same image!')
+            attempt.push(chosen)
         }
         //found the match
         else if (chosen[0] === chosen[1]) {
@@ -97,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cards[oneid].removeEventListener('click', flip)
             cards[twoid].removeEventListener('click', flip)
             //push into the won array
+            attempt.push(chosen)
             won.push(chosen)
         }
         //wrong image
@@ -105,18 +147,22 @@ document.addEventListener('DOMContentLoaded', () => {
             cards[oneid].setAttribute('src', 'images/blank.jpg')
             cards[twoid].setAttribute('src', 'images/blank.jpg')
             //try again
+            attempt.push(chosen)
             alert('Try again!')
         }
         //reset the arrays
         chosen = []
         chosenid = []
         //update the score
-        final.textContent = won.length
+        finalscore.textContent = won.length
+        attempts.textContent = attempt.length
 
         //if the score is half the card array length - you won
         if  (won.length === cards.length/2) {
             //alert the user
-            final.textContent = 'Yay, you matched all the beagles!'
+            finalscore.textContent = 'Yay, you matched all the beagles!'
+            localStorage.setItem("playerInfo", JSON.stringify(player));
+            window.location = "end.html";
         }
     }
 
@@ -131,5 +177,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+
+
     create()
 })
+
+
+
+
+
