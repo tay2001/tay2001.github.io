@@ -119,7 +119,6 @@
         if (userObject.collide(autonomousObject)) {
             userObject.resize();
             score++;
-            body.innerHTML=
             scoreDisplay.innerHTML = "Score: " + score;
         }
         if (!userObject.collide(autonomousObject)) {
