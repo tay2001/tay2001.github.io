@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Egg Chase</title>
+    <style>
+        body {
+            background-color: #c3fdff; /* Set the background color to pastel blue */
+        }
+        canvas {
+            display: block;
+            margin: 0 auto; /* Center the canvas */
+            border: 10px solid #c8e6c9; /* Add a multi-colored border to the canvas */
+            border-radius: 20px; /* Make the border rounded */
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px auto; /* Center the score */
+            text-align: center;
+        }
+        #play-again {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px auto; /* Center the play-again button */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="500" height="500"></canvas> <!-- Create the canvas element -->
+<audio id="music" controls>
+    <source src="happy.mp3" type="audio/wav" preload="auto">
+    Audio not available
+</audio><div id="score"></div> <!-- Create a div for the score -->
+<button id="play-again" onclick="startGame()">Play Again</button> <!-- Create a button to play again -->
+<script>
+    // Create a class for the objects
+    class EasterObject {
+        constructor(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.dx = 2; // Speed of autonomous movement
+            this.dy = 2;
+        }
+
+        draw(ctx) {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.ellipse(this.x, this.y, this.radius, this.radius*2/3, 0, 0, Math.PI*2);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        move(canvas) {
+            this.x += this.dx;
+            this.y += this.dy;
+
+            // Check for collision with canvas edges
+            if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+                this.dx = -this.dx;
+            }
+            if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
+                this.dy = -this.dy;
+            }
+        }
+
+        collide(other) {
+            // Check for collision with other object
+            let distance = Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+            if (distance < this.radius + other.radius) {
+                return true;
+            }
+
+            return false;
+        }
+
+        resize() {
+            // Change size of object if colliding with other object
+            this.radius -= 5;
+
+        }
+    }
+
+    // Set up the canvas and context
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+
+    // Create the objects
+    let userObject = new EasterObject(50, 50, 25, "#ffcc80"); // Orange
+    let autonomousObject = new EasterObject(300, 300, 25, "#b2dfdb"); // Teal
+
+    // Set up the score and display
+    let score = 0;
+    let scoreDisplay = document.getElementById("score");
+
+    // Add event listener for user control
+    canvas.addEventListener("mousemove", function(event) {
+        userObject.x = event.clientX - canvas.offsetLeft;
+        userObject.y = event.clientY - canvas.offsetTop;
+    });
+    // Define the game loop
+    function gameLoop() {
+        let timeSinceLastCollision = 0;
+        let timeInterval = 1000; // 1 second
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the objects
+        userObject.draw(ctx);
+        autonomousObject.draw(ctx);
+
+        // Move the object
+        autonomousObject.move(canvas);
+
+        // Check for collision
+        if (userObject.collide(autonomousObject)) {
+            userObject.resize();
+            score++;
+            body.innerHTML=
+            scoreDisplay.innerHTML = "Score: " + score;
+        }
+        if (!userObject.collide(autonomousObject)) {
+            timeSinceLastCollision += 10;
+            if (timeSinceLastCollision >= timeInterval) {
+                score++;
+                scoreDisplay.innerHTML = "Score: " + score;
+                timeSinceLastCollision = 0;
+            }
+        }
+
+        if (userObject.collide(autonomousObject)) {
+            userObject.resize();
+            score--;
+            scoreDisplay.innerHTML = "Score: " + score;
+            // Move user object away from autonomous object
+            userObject.x += (userObject.x - autonomousObject.x) * 2;
+            userObject.y += (userObject.y - autonomousObject.y) * 2;
+        }
+
+
+
+        // End game if user object is too small
+        if (userObject.radius <= 0) {
+            clearInterval(gameInterval);
+            scoreDisplay.innerHTML = "Game Over! Your final score is: " + score;
+            document.getElementById("play-again").style.display = "block";
+        }
+    }
+
+    // Start the game loop
+    let gameInterval = setInterval(gameLoop, 10);
+
+    // Define the function to restart the game
+    function startGame() {
+        // Reset the objects and score
+        userObject = new EasterObject(50, 50, 25, "#ffcc80");
+        autonomousObject = new EasterObject(300, 300, 25, "#b2dfdb");
+        score = 0;
+        scoreDisplay.innerHTML = "Score: " + score;
+
+        // Hide the play-again button
+        document.getElementById("play-again").style.display = "none";
+
+        // Restart the game loop
+        gameInterval = setInterval(gameLoop, 10);
+    }
+</script>
+</body>
+</html>
