@@ -1,0 +1,42 @@
+/* Set font styles */
+body {
+    background-color: #9fb7ff;
+
+}
+
+/* Style the header */
+h1 {
+    text-align: center;
+    color: #8b0000;
+}
+
+/* Style the canvas and restart button */
+#canvas {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+#restart-button {
+    display: block;
+    margin: 20px auto;
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #8b0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#restart-button:hover {
+    background-color: #800000;
+}
+
+/* Style the score display */
+#score {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #808080;
+}
