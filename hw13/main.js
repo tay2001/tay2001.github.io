@@ -1,87 +1,120 @@
-// Create a scene
-const scene = new THREE.Scene();
+// Set up Scene
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild(renderer.domElement)
+renderer.outputEncoding = THREE.sRGBEncoding;
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
+// New background Color
+scene.background = new THREE.Color( 'rgb(22,91,51)' );
 
-// Create a camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 10;
 
-// Create a renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// Create Cube Shape
+var geometry = new THREE.TorusGeometry(2.5, .5, 8, 25 );
+var material = new THREE.MeshBasicMaterial({
+    color: 0xdacd1a // Color of cube
+});
+// Create material to make cube visible
+var torus = new THREE.Mesh(geometry, material);
+scene.add(torus);
 
-// Create a star geometry
-const starGeometry = new THREE.Geometry();
-starGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+var torus2 = new THREE.Mesh(geometry, material);
+scene.add(torus2);
 
-// Add points to the star geometry
-for (let i = 0; i < 5; i++) {
-    const angle = i * 2 * Math.PI / 5;
-    const x = Math.cos(angle);
-    const y = Math.sin(angle);
-    starGeometry.vertices.push(new THREE.Vector3(x, y, 0));
+// Adding 3D models
+var loader = new THREE.GLTFLoader();
+
+var model = load_model();
+
+function load_model(){
+    loader.load('models/pine.glb', function(gltf) {
+
+        scene.add(gltf.scene);
+        gltf.scene.scale.set(.15,.15,.15); // THIS fixes the scale of model
+        gltf.scene.position.set(0, -35, 0); // This moves the position of the model
+
+    }, undefined, function(error) {
+        console.error(error);
+    });
 }
 
-// Create a material for the star
-const starMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.5,
-});
+// TEXT
+var text;
+loadFont()
 
-// Create the first star object
-const star1 = new THREE.Points(starGeometry, starMaterial);
-star1.position.set(-2, 0, 0);
-scene.add(star1);
+function loadFont() {
+    var loader = new THREE.FontLoader();
 
-// Create the second star object
-const star2 = new THREE.Points(starGeometry, starMaterial);
-star2.position.set(2, 0, 0);
-scene.add(star2);
+    // This loads our font information as a json
+    loader.load('js/Kaushan_Script_Regular.json', function(res){
+        font = res;
+        createText(); // This creates the text from details in the function below.
+    });
+}
 
-// Create an OBJ loader
-const loader = new THREE.OBJLoader();
-
-// Load the Mario model
-loader.load('hw13/mario.obj',
-    function (object) {
-        // Create a material for the Mario model
-        const marioMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            roughness: 0.7,
-            metalness: 0.0,
-        });
-        // Set the material to all the meshes in the Mario object
-        object.traverse(function (child) {
-            if (child instanceof THREE.Mesh) {
-                child.material = marioMaterial;
-            }
-        });
-
-        // Position and scale the Mario object
-        object.position.set(0, -1, -5);
-        object.scale.set(0.1, 0.1, 0.1);
-
-        // Add the Mario object to the scene
-        scene.add(object);
-    },
-    function (xhr) {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    function (error) {
-        console.log('An error happened: ' + error);
+function createText() {
+    // This creates text shapes from the Json file.
+    textGeo = new THREE.TextGeometry( 'Merry\nChristmas!', {
+        font: font,
+        size: 6,
+        height: 2.5,
+        curveSegments: 6,
+        bevelEnabled: false,
+        bevelThickness: 0,
+        bevelSize: 0,
+        bevelOffset: 0,
+        bevelSegments: 0
     });
 
-// Animate the scene
-function animate() {
-    requestAnimationFrame(animate);
-    // Rotate the stars around the z-axis
-    star1.rotation.z += 0.01;
-    star2.rotation.z -= 0.01;
+    var color = new THREE.Color(0xf8b299);
+    var textMaterial = new THREE.MeshBasicMaterial({
+        color: color // Text color as a material
+    });
 
-    // Render the scene
-    renderer.render(scene, camera);
+    text = new THREE.Mesh(textGeo, textMaterial)
+    //  text.position.x = -textGeo.boundingBox.max.x / 2;
+    text.castShadow = true;
+    text.position.set(0,20,10); // moves the position of the text
+    scene.add(text)
 }
-animate()
+
+
+// Camera
+camera.position.y = 0
+
+// Lighting
+var light = new THREE.DirectionalLight(0xf3d2f9, 3);
+
+scene.add(light);
+
+// Animate the shapes, and render it
+function animate() {
+    requestAnimationFrame( animate );
+    // Include rotation, otherwise, we can't see the 3D effect.
+    torus.rotation.x += 0.01;
+    torus.rotation.y += 0.01;
+    torus2.rotation.x -= 0.02;
+    torus2.rotation.y -= 0.02;
+    renderer.render( scene, camera );
+}
+animate();
+
+// Rotate Models
+var rotation = 0
+
+function spinCamera() {
+    rotation += 0.001
+    camera.position.z = Math.sin(rotation) * 80;
+    camera.position.x = Math.cos(rotation) * 80;
+    camera.lookAt(scene.position)
+}
+var render = function() {
+
+    requestAnimationFrame(render);
+    spinCamera();
+
+    renderer.render(scene, camera);
+};
+
+render();
